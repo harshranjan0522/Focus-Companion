@@ -1,0 +1,18 @@
+.tab-item { display:flex; justify-content:space-between; align-items:center;
+  padding:8px; margin-bottom:6px; border-radius:6px; background:var(--tab-item-bg); }
+
+.tab-title { flex:1; margin-right:10px; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.tab-btn-group { display:flex; gap:6px; }
+
+.focus-btn, .distract-btn { padding:6px 8px; border-radius:6px; border:none; cursor:pointer; font-size:12px; color:#fff; }
+.focus-btn { background:#4caf50; } 
+.focus-btn.active { background:#2e7d32; box-shadow:0 0 6px rgba(46,125,50,0.6); }
+
+.distract-btn { background:#f44336; }
+.distract-btn.active { background:#8b4513; box-shadow:0 0 6px rgba(139,69,19,0.6); }
+
+.tab-timer { font-size:12px; font-weight:bold; color:#f44336; margin-left:8px; }
+
+body.light { --tab-item-bg:#fff; color:#000; } 
+body.dark { --tab-item-bg:#2b2b2b; color:#fff; }

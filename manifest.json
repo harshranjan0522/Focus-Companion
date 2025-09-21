@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Companion - Smart Productivity Assistant",
+  "version": "1.1",
+  "description": "Helps users manage focus, track productivity, and handle distractions while browsing.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
