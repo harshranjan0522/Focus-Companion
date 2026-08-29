@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Focus Companion</title>
+  <link rel="stylesheet" href="ui.css" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="fc-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7C5CFF"/>
+            <stop offset="55%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#06B6D4"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="14.4" fill="url(#fc-g)"/>
+        <circle cx="32" cy="32" r="19.2" fill="none" stroke="#fff" stroke-width="6.27"
+                stroke-linecap="round" stroke-dasharray="100.53 20.11"/>
+        <circle cx="32" cy="32" r="5.5" fill="#fff"/>
+      </svg>
+      <div class="brand-name">Focus <span>Companion</span></div>
+    </div>
+    <div class="row" style="gap:4px">
+      <span class="chip chip-streak" id="streak" hidden></span>
+      <button class="icon-btn" id="open-options" title="Settings" aria-label="Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="segmented" role="tablist" id="tabs">
+    <button role="tab" data-view="timer" aria-selected="true">Timer</button>
+    <button role="tab" data-view="sites" aria-selected="false">Sites</button>
+    <button role="tab" data-view="stats" aria-selected="false">Stats</button>
+  </nav>
+
+  <main>
+    <!-- ============================ TIMER ============================ -->
+    <section id="view-timer" class="view" role="tabpanel">
+      <div class="dial-wrap">
+        <svg class="dial" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="dial-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7C5CFF"/>
+              <stop offset="55%" stop-color="#4F46E5"/>
+              <stop offset="100%" stop-color="#06B6D4"/>
+            </linearGradient>
+          </defs>
+          <circle class="dial-track" cx="100" cy="100" r="88" />
+          <circle class="dial-progress" id="dial-progress" cx="100" cy="100" r="88" />
+        </svg>
+        <div class="dial-face">
+          <div class="dial-phase label" id="phase-label">Ready</div>
+          <div class="dial-time tnum" id="clock">25:00</div>
+          <div class="dial-goal truncate" id="goal-display"></div>
+        </div>
+      </div>
+
+      <!-- idle: pick a length and go -->
+      <div id="setup">
+        <div class="presets" id="presets" role="group" aria-label="Session length">
+          <button class="preset" data-min="15">15<small>m</small></button>
+          <button class="preset is-on" data-min="25">25<small>m</small></button>
+          <button class="preset" data-min="45">45<small>m</small></button>
+          <button class="preset" data-min="60">60<small>m</small></button>
+        </div>
+        <input type="text" id="goal" maxlength="80"
+               placeholder="What are you working on? (optional)" />
+        <button class="btn btn-primary btn-lg btn-block" id="start">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z"/>
+          </svg>
+          Start focus session
+        </button>
+      </div>
+
+      <!-- running: control the session -->
+      <div id="controls" hidden>
+        <div class="control-row">
+          <button class="btn" id="pause">Pause</button>
+          <button class="btn" id="extend">+5 min</button>
+          <button class="btn btn-danger" id="stop">End</button>
+        </div>
+        <p class="tiny muted" id="strict-note" hidden>
+          Strict mode is on — this session runs to the end.
+        </p>
+      </div>
+
+      <!-- the site you are on right now -->
+      <div class="card current" id="current-card">
+        <div class="spread">
+          <div class="row truncate">
+            <img class="favicon" id="current-icon" alt="" />
+            <div class="stack truncate">
+              <strong class="truncate" id="current-domain">—</strong>
+              <span class="tiny muted truncate" id="current-note">No page in focus</span>
+            </div>
+          </div>
+          <span class="chip" id="current-chip">Neutral</span>
+        </div>
+        <div class="budget" id="budget" hidden>
+          <div class="budget-bar"><div class="budget-fill" id="budget-fill"></div></div>
+          <span class="tiny tnum muted" id="budget-text"></span>
+        </div>
+        <div class="segmented classify" id="classify">
+          <button data-set="focus">Focus</button>
+          <button data-set="neutral">Neutral</button>
+          <button data-set="distracting">Distracting</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ SITES ============================ -->
+    <section id="view-sites" class="view" role="tabpanel" hidden>
+      <div class="spread sites-head">
+        <span class="label">Open tabs</span>
+        <button class="icon-btn" id="refresh" title="Refresh" aria-label="Refresh tabs">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M23 4v6h-6M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+      <div id="tab-list" class="list"></div>
+
+      <div class="spread sites-head">
+        <span class="label">Blocked sites</span>
+        <span class="tiny muted" id="rule-count"></span>
+      </div>
+      <div id="rule-list" class="list"></div>
+      <button class="btn btn-block" id="manage-rules">Manage full list</button>
+    </section>
+
+    <!-- ============================ STATS ============================ -->
+    <section id="view-stats" class="view" role="tabpanel" hidden>
+      <div class="stat-grid">
+        <div class="card stat">
+          <div class="stat-value tnum" id="s-focus">0m</div>
+          <div class="label">Focused today</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-value tnum" id="s-sessions">0</div>
+          <div class="label">Sessions</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-value tnum" id="s-blocked">0</div>
+          <div class="label">Blocks</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-value tnum" id="s-streak">0</div>
+          <div class="label">Day streak</div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="spread">
+          <span class="label">Last 7 days</span>
+          <span class="tiny muted tnum" id="week-total"></span>
+        </div>
+        <div class="chart" id="chart" role="img" aria-label="Focus time over the last seven days"></div>
+      </div>
+
+      <div class="card focus-ratio">
+        <div class="spread">
+          <span class="label">Time on task today</span>
+          <span class="tiny tnum" id="ratio-pct">—</span>
+        </div>
+        <div class="ratio-bar"><div class="ratio-fill" id="ratio-fill"></div></div>
+        <p class="tiny muted" id="ratio-note">Start a session to begin tracking.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

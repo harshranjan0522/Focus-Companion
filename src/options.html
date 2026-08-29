@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Focus Companion — Settings</title>
+  <link rel="stylesheet" href="ui.css" />
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <header class="page-header">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="fc-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7C5CFF"/>
+            <stop offset="55%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#06B6D4"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="14.4" fill="url(#fc-g)"/>
+        <circle cx="32" cy="32" r="19.2" fill="none" stroke="#fff" stroke-width="6.27"
+                stroke-linecap="round" stroke-dasharray="100.53 20.11"/>
+        <circle cx="32" cy="32" r="5.5" fill="#fff"/>
+      </svg>
+      <div class="brand-name">Focus <span>Companion</span></div>
+    </div>
+    <span class="saved" id="saved" hidden>Saved</span>
+  </header>
+
+  <div class="banner card" id="welcome" hidden>
+    <h2>You're set up.</h2>
+    <p class="muted">
+      Focus Companion already knows about <strong id="seed-count">36</strong> commonly
+      distracting sites. Start a session from the toolbar icon — when you drift onto one of
+      them, you get a short grace period, then the page steps aside until you're done.
+    </p>
+    <button class="btn" id="dismiss-welcome">Got it</button>
+  </div>
+
+  <main>
+    <!-- ---------------- timing ---------------- -->
+    <section class="card">
+      <h2>Sessions</h2>
+      <p class="section-note muted">Pomodoro-style blocks with automatic breaks.</p>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Focus length <em>minutes</em></span>
+          <input type="number" id="focusMinutes" min="1" max="180" />
+        </label>
+        <label class="field">
+          <span>Short break <em>minutes</em></span>
+          <input type="number" id="breakMinutes" min="1" max="60" />
+        </label>
+        <label class="field">
+          <span>Long break <em>minutes</em></span>
+          <input type="number" id="longBreakMinutes" min="1" max="90" />
+        </label>
+        <label class="field">
+          <span>Long break every <em>sessions</em></span>
+          <input type="number" id="sessionsUntilLongBreak" min="0" max="12" />
+        </label>
+      </div>
+
+      <label class="toggle-row">
+        <div class="stack">
+          <strong>Start breaks automatically</strong>
+          <span class="tiny muted">Roll straight into a break when a focus block ends.</span>
+        </div>
+        <span class="switch"><input type="checkbox" id="autoStartBreaks" /><span class="track"></span></span>
+      </label>
+
+      <label class="toggle-row">
+        <div class="stack">
+          <strong>Pause when you step away</strong>
+          <span class="tiny muted">Stops the clock after <span id="idle-label">60</span>s of inactivity, so stats stay honest.</span>
+        </div>
+        <span class="switch"><input type="checkbox" id="pauseWhenIdle" /><span class="track"></span></span>
+      </label>
+
+      <label class="toggle-row">
+        <div class="stack">
+          <strong>Strict mode</strong>
+          <span class="tiny muted">A focus session cannot be ended early. Use with care.</span>
+        </div>
+        <span class="switch"><input type="checkbox" id="strictMode" /><span class="track"></span></span>
+      </label>
+    </section>
+
+    <!-- ---------------- distractions ---------------- -->
+    <section class="card">
+      <h2>Distractions</h2>
+      <p class="section-note muted">What happens when you land on a blocked site mid-session.</p>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Grace period <em>seconds per site, per session</em></span>
+          <input type="number" id="graceSeconds" min="0" max="3600" step="10" />
+        </label>
+        <label class="field">
+          <span>Snooze length <em>minutes</em></span>
+          <input type="number" id="snoozeMinutes" min="1" max="60" />
+        </label>
+        <label class="field">
+          <span>When the grace period ends</span>
+          <select id="onExpire">
+            <option value="block">Show the block page (keeps the tab)</option>
+            <option value="close">Close the tab</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Theme</span>
+          <select id="theme">
+            <option value="system">Match system</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="toggle-row">
+        <div class="stack">
+          <strong>Notifications</strong>
+          <span class="tiny muted">Session start and end, plus a 30-second warning before a block.</span>
+        </div>
+        <span class="switch"><input type="checkbox" id="notifications" /><span class="track"></span></span>
+      </label>
+    </section>
+
+    <!-- ---------------- rules ---------------- -->
+    <section class="card">
+      <div class="spread">
+        <h2>Site rules</h2>
+        <div class="segmented rule-filter" id="rule-filter">
+          <button data-filter="distracting" aria-selected="true">Blocked</button>
+          <button data-filter="focus" aria-selected="false">Allowed</button>
+        </div>
+      </div>
+      <p class="section-note muted">
+        A rule covers subdomains too — <code>youtube.com</code> also matches <code>m.youtube.com</code>.
+      </p>
+
+      <form class="add-row" id="add-form">
+        <input type="text" id="add-domain" placeholder="Add a domain, e.g. news.ycombinator.com"
+               autocomplete="off" spellcheck="false" />
+        <button class="btn btn-primary" type="submit">Add</button>
+      </form>
+
+      <div id="rules" class="rules"></div>
+    </section>
+
+    <!-- ---------------- data ---------------- -->
+    <section class="card">
+      <h2>Your data</h2>
+      <p class="section-note muted">
+        Everything stays on this machine in local extension storage. Nothing is uploaded.
+      </p>
+      <div class="row wrap">
+        <button class="btn" id="export">Export settings &amp; stats</button>
+        <button class="btn" id="import">Import from file</button>
+        <button class="btn btn-danger" id="reset">Reset everything</button>
+      </div>
+      <input type="file" id="import-file" accept="application/json" hidden />
+      <p class="tiny muted" id="data-note"></p>
+    </section>
+
+    <p class="footnote muted tiny">
+      Tip: press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> to start or end a session without
+      opening the popup. Rebind it at <code>chrome://extensions/shortcuts</code>.
+    </p>
+  </main>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Focus Companion — design system
+   Shared by the popup, the block page and the options page.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* brand ------------------------------------------------------------- */
+  --violet: #7C5CFF;
+  --indigo: #4F46E5;
+  --cyan:   #06B6D4;
+  --brand-grad: linear-gradient(135deg, var(--violet) 0%, var(--indigo) 55%, var(--cyan) 100%);
+
+  --green: #10B981;
+  --amber: #F59E0B;
+  --red:   #EF4444;
+
+  /* light surfaces ---------------------------------------------------- */
+  --bg:        #F6F7FB;
+  --surface:   #FFFFFF;
+  --surface-2: #F1F2F7;
+  --border:    #E4E6EF;
+  --text:      #14162B;
+  --text-dim:  #5C6079;
+  --text-mute: #8E93AC;
+  --shadow:    0 1px 2px rgba(20, 22, 43, .06), 0 8px 24px rgba(20, 22, 43, .07);
+  --shadow-sm: 0 1px 2px rgba(20, 22, 43, .07);
+
+  --r-sm: 8px;
+  --r:    12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+
+  --ease: cubic-bezier(.34, 1.2, .48, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:        #0B0C14;
+    --surface:   #14162099;
+    --surface-2: #1B1D2A;
+    --border:    #262939;
+    --text:      #EEF0F8;
+    --text-dim:  #A2A7BF;
+    --text-mute: #6E7490;
+    --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:        #0B0C14;
+  --surface:   #14162099;
+  --surface-2: #1B1D2A;
+  --border:    #262939;
+  --text:      #EEF0F8;
+  --text-dim:  #A2A7BF;
+  --text-mute: #6E7490;
+  --shadow:    0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+}
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute must win over any layout rule that sets `display`.
+   Several components below are flex/grid containers that are toggled with it. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 13px/1.5 ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI",
+        Roboto, "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numbers that must not jitter as they count down. */
+.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+h1, h2, h3 { margin: 0; font-weight: 650; letter-spacing: -.01em; }
+
+/* --- brand header ----------------------------------------------------- */
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand svg, .brand img { width: 26px; height: 26px; border-radius: 7px; flex: none; }
+.brand-name {
+  font-size: 14px; font-weight: 650; letter-spacing: -.015em;
+}
+.brand-name span {
+  background: var(--brand-grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- buttons ---------------------------------------------------------- */
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--indigo); outline-offset: 2px;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 16px; border-radius: var(--r);
+  background: var(--surface-2); color: var(--text);
+  font-weight: 550; font-size: 13px;
+  border: 1px solid var(--border);
+  transition: transform .12s var(--ease), background .15s, border-color .15s;
+}
+.btn:hover:not(:disabled) { background: var(--border); }
+.btn:active:not(:disabled) { transform: scale(.975); }
+
+.btn-primary {
+  background: var(--brand-grad); color: #fff; border-color: transparent;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, .32);
+}
+.btn-primary:hover:not(:disabled) { filter: brightness(1.07); background: var(--brand-grad); }
+
+.btn-danger { color: var(--red); }
+.btn-danger:hover:not(:disabled) { background: color-mix(in srgb, var(--red) 12%, transparent); }
+
+.btn-block { width: 100%; }
+.btn-lg { padding: 13px 20px; font-size: 14px; border-radius: var(--r-lg); }
+
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: grid; place-items: center; color: var(--text-dim);
+  transition: background .15s, color .15s;
+}
+.icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+/* --- cards ------------------------------------------------------------ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+@supports (backdrop-filter: blur(8px)) {
+  .card { backdrop-filter: blur(10px); }
+}
+
+/* --- form controls ---------------------------------------------------- */
+input[type="text"], input[type="number"], select {
+  width: 100%; padding: 10px 12px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r);
+  font: inherit;
+}
+input::placeholder { color: var(--text-mute); }
+
+/* iOS-style switch */
+.switch { position: relative; display: inline-block; width: 40px; height: 23px; flex: none; }
+.switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.switch .track {
+  position: absolute; inset: 0; border-radius: 999px;
+  background: var(--border); transition: background .2s var(--ease);
+}
+.switch .track::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 17px; height: 17px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  transition: transform .2s var(--ease);
+}
+.switch input:checked + .track { background: var(--indigo); }
+.switch input:checked + .track::after { transform: translateX(17px); }
+.switch input:focus-visible + .track { outline: 2px solid var(--indigo); outline-offset: 2px; }
+
+/* --- segmented control ------------------------------------------------ */
+.segmented {
+  display: flex; gap: 2px; padding: 3px;
+  background: var(--surface-2); border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+.segmented button {
+  flex: 1; padding: 7px 10px; border-radius: 9px;
+  font-size: 12px; font-weight: 550; color: var(--text-dim);
+  transition: background .18s, color .18s;
+}
+.segmented button[aria-selected="true"] {
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm);
+}
+/* --- pills / chips ---------------------------------------------------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 600; letter-spacing: .01em;
+  background: var(--surface-2); color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.chip-focus      { color: var(--green); background: color-mix(in srgb, var(--green) 12%, transparent); border-color: color-mix(in srgb, var(--green) 26%, transparent); }
+.chip-distracting{ color: var(--red);   background: color-mix(in srgb, var(--red) 12%, transparent);   border-color: color-mix(in srgb, var(--red) 26%, transparent); }
+.chip-neutral    { color: var(--text-dim); }
+.chip-streak     { color: var(--amber); background: color-mix(in srgb, var(--amber) 13%, transparent); border-color: color-mix(in srgb, var(--amber) 28%, transparent); }
+
+/* --- favicon ---------------------------------------------------------- */
+.favicon {
+  width: 16px; height: 16px; border-radius: 4px; flex: none;
+  background: var(--surface-2);
+}
+
+/* --- misc ------------------------------------------------------------- */
+.row { display: flex; align-items: center; gap: 10px; }
+.spread { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.stack { display: flex; flex-direction: column; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.muted { color: var(--text-dim); }
+.tiny { font-size: 11px; }
+.label {
+  font-size: 10.5px; font-weight: 650; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--text-mute);
+}
+.empty {
+  padding: 26px 16px; text-align: center; color: var(--text-mute); font-size: 12px;
+}
+
+/* A soft fade at the foot of a scroll region, so a clipped row reads as
+   "there is more below" rather than as a rendering glitch. Applied by script
+   only while the region actually overflows and is not scrolled to the end. */
+.scroll-fade {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+}
+
+/* Scrollbars that do not shout. */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb {
+  background: var(--border); border-radius: 999px;
+  border: 2px solid transparent; background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-mute); background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

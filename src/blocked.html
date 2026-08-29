@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stay on track — Focus Companion</title>
+  <link rel="stylesheet" href="ui.css" />
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <main class="shell">
+    <div class="halo">
+      <svg viewBox="0 0 64 64" class="mark" aria-hidden="true">
+        <defs>
+          <linearGradient id="fc-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7C5CFF"/>
+            <stop offset="55%" stop-color="#4F46E5"/>
+            <stop offset="100%" stop-color="#06B6D4"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="14.4" fill="url(#fc-g)"/>
+        <circle cx="32" cy="32" r="19.2" fill="none" stroke="#fff" stroke-width="6.27"
+                stroke-linecap="round" stroke-dasharray="100.53 20.11"/>
+        <circle cx="32" cy="32" r="5.5" fill="#fff"/>
+      </svg>
+    </div>
+
+    <h1>Time's up on <span id="domain">this site</span></h1>
+    <p class="lede" id="lede">You set a limit, and you've reached it. Back to the work that matters.</p>
+
+    <div class="session-card card" id="session-card" hidden>
+      <div class="spread">
+        <span class="label">Focus session</span>
+        <span class="tiny muted" id="goal"></span>
+      </div>
+      <div class="remaining tnum" id="remaining">--:--</div>
+      <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary btn-lg" id="back">Back to work</button>
+      <button class="btn btn-lg" id="snooze">Give me 5 more minutes</button>
+    </div>
+
+    <button class="link" id="end-session">End the focus session instead</button>
+    <p class="tiny muted strict" id="strict-note" hidden>
+      Strict mode is on. This session runs to the end — you've got this.
+    </p>
+
+    <footer class="stats-strip" id="stats-strip" hidden>
+      <div><strong class="tnum" id="s-focus">0m</strong><span class="label">Focused today</span></div>
+      <div><strong class="tnum" id="s-blocked">0</strong><span class="label">Blocks today</span></div>
+      <div><strong class="tnum" id="s-streak">0</strong><span class="label">Day streak</span></div>
+    </footer>
+  </main>
+
+  <script type="module" src="blocked.js"></script>
+</body>
+</html>
