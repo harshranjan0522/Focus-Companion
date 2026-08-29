@@ -1,0 +1,10 @@
+{
+  "name": "focus-companion",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Chrome extension for focus sessions and distraction control.",
+  "scripts": {
+    "test": "node test/run.js"
+  }
+}

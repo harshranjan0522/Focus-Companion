@@ -1,0 +1,87 @@
+/* The interstitial shown instead of destroying the tab. */
+
+body {
+  min-height: 100vh; display: grid; place-items: center;
+  padding: 40px 24px; position: relative; overflow: hidden;
+}
+
+/* Slow drifting colour field — motion is subtle enough not to distract. */
+.aurora {
+  position: fixed; inset: -35%; z-index: 0; opacity: .5;
+  background:
+    radial-gradient(38% 42% at 22% 28%, rgba(124, 92, 255, .5), transparent 62%),
+    radial-gradient(34% 40% at 78% 34%, rgba(6, 182, 212, .42), transparent 62%),
+    radial-gradient(44% 46% at 52% 78%, rgba(79, 70, 229, .38), transparent 62%);
+  filter: blur(46px);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from { transform: translate3d(-2.5%, -1.5%, 0) scale(1); }
+  to   { transform: translate3d(2.5%, 2%, 0) scale(1.1); }
+}
+
+.shell {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 468px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  animation: rise .55s var(--ease) both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Breathing halo — an unhurried 5.5s cycle to slow the reader down. */
+.halo { position: relative; display: grid; place-items: center; padding: 12px; }
+.halo::before {
+  content: ""; position: absolute; width: 128px; height: 128px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, .34), transparent 68%);
+  animation: pulse 5.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(.82); opacity: .5; }
+  50%      { transform: scale(1.14); opacity: 1; }
+}
+.mark { width: 62px; height: 62px; border-radius: 15px; position: relative; }
+
+h1 {
+  font-size: 27px; line-height: 1.24; letter-spacing: -.025em; max-width: 15ch;
+}
+h1 span {
+  background: var(--brand-grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  overflow-wrap: anywhere;
+}
+.lede { margin: 0; color: var(--text-dim); font-size: 14.5px; max-width: 40ch; }
+
+.session-card { width: 100%; padding: 16px; display: flex; flex-direction: column; gap: 9px; }
+.remaining { font-size: 34px; font-weight: 650; letter-spacing: -.03em; }
+.progress { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.progress-fill {
+  height: 100%; background: var(--brand-grad); width: 0%;
+  transition: width .95s linear;
+}
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; }
+.actions .btn { flex: 1 1 190px; }
+
+.link {
+  color: var(--text-mute); font-size: 12.5px; text-decoration: underline;
+  text-underline-offset: 3px; padding: 4px;
+}
+.link:hover { color: var(--text-dim); }
+.strict { margin: 0; max-width: 36ch; }
+
+.stats-strip {
+  display: flex; gap: 30px; margin-top: 10px;
+  padding-top: 18px; border-top: 1px solid var(--border); width: 100%;
+  justify-content: center;
+}
+.stats-strip div { display: flex; flex-direction: column; gap: 3px; }
+.stats-strip strong { font-size: 18px; font-weight: 650; }
+
+@media (max-width: 420px) {
+  h1 { font-size: 23px; }
+  .stats-strip { gap: 18px; }
+}
